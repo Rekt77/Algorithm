@@ -12,7 +12,10 @@ def isSequence(list_):
 
 N = int(sys.stdin.readline())
 han = []
-for i in range(101,N+1):
-    if isSequence(list(map(int,list(str(i))))):
-        han.append(i)
-print(len(han)+99)
+if N >= 100:
+    for i in range(101,N+1):
+        if isSequence(list(map(int,list(str(i))))):
+            han.append(i)
+    print(len(han)+99)
+else:
+    print(N)
