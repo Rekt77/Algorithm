@@ -1,39 +1,37 @@
-class Stack:
-    stack = []
-    def push(self,object):
-        self.stack.append(object)
-    def pop(self):
-        return self.stack.pop()
-
-class Queue:
-    queue = []
-    def enqueue(self,object):
-        self.queue.append(object)
-    def dequeue(self):
-        return self.queue.pop(0)
-
 V,E,start = map(int,input().split())
 edgeList = []
 for _ in range(E):
     c,n = map(int,input().split())
     edgeList.append((c,n))
 
-adjacencyList = [[] for _ in range(V)]
+adj = {i+1:[] for i in range(V)}
 
 for edge in edgeList:
-    adjacencyList[edge[0]-1].append(edge[1])
+    adj[edge[0]].append(edge[1])
+    adj[edge[1]].append(edge[0])
 
-print(V,E,at)
-print(edgeList)
-print(adjacencyList)
-visitedVertex =[]
-stack = Stack()
-queue = Queue()
+for k in adj.keys():
+    adj[k].sort()
 
-def DFS(start)
-for i in range(V):
-    if start in visitedVertex:
-    for neighbor in adjacencyList[cur-1]:
-        if not neighbor in visitedVertex:
-            DFS(neighbor)
-    
+def BFS(adj,current):
+    visited = [current]
+    queue = [current]
+    while queue:
+        current = queue.pop()
+        for nVertex in adj[current]:
+            if not nVertex in visited:
+                queue.insert(0,nVertex)
+                visited.append(nVertex)
+    return visited
+
+dfs_visited = []
+
+def DFS(adj,start,visited):
+    visited.append(start)
+    for each in adj[start]:
+        if not each in visited:
+            DFS(adj,each,visited)
+
+DFS(adj,start,dfs_visited)
+print(*dfs_visited)
+print(*BFS(adj,start))
