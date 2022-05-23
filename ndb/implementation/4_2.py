@@ -1,11 +1,11 @@
-counter = 0
+import sys
 
-N = input()
+N = int(sys.stdin.readline())
+count = 0
+for H in range(N+1):
+    for M in range(60):
+            for S in range(60):
+                if "3" in str(H)+str(M)+str(S):
+                    count+=1
 
-for h in range(int(N)+1):
-    for m in range(60):
-        for s in range(60):
-            if "3" in "%s%s%s"%(h,m,s):
-                counter += 1
-
-print(counter)
+print(count)

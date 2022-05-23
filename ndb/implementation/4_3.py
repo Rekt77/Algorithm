@@ -1,11 +1,12 @@
-horizontal_order = {alpha:i+1 for i,alpha in enumerate("abcdedfgh")}
-X,Y = [int(a) if a.isdigit() else horizontal_order[a] for a in input()]
-vectors = [(2,1),(2,-1),(-2,1),(-2,-1),(1,2),(-1,2),(1,-2),(-1,-2)]
-available = 0
+import sys, string
 
-for vector in vectors:
-    rowMask=(X+vector[0] > 0 and X+vector[0] < 9)
-    colMask=(X+vector[1] > 0 and X+vector[1] < 9)
-    if rowMask and colMask:
-        available+=1
-print(available)
+knight = sys.stdin.readline()
+vectors = [(1, 2), (1, -2), (2, 1), (2, -1), (-1, 2), (-1, -2), (-2, 1), (-2, -1)]
+count = 0
+for v in vectors:
+    col = ord(knight[0])
+    row = int(knight[1])
+    if 0<row+v[0]<9 and ord("a")<=col+v[1]<=ord("h"):
+        print(chr(col+v[1])+str(row+v[0]))
+        count +=1
+print(count)

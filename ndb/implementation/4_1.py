@@ -1,21 +1,10 @@
-N = int(input().split()[0])
-commands = input().split()
+import sys
+N = int(sys.stdin.readline())
+commands = sys.stdin.readline().strip().split()
+c2vec = {"R":(0,1),"L":(0,-1),"U":(-1,0),"D":(1,0)}
+init = (1,1)
+for cmd in commands :
+    if (init[0]+c2vec[cmd][0])>0 and (init[1]+c2vec[cmd][1])>0:
+        init = (init[0]+c2vec[cmd][0],init[1]+c2vec[cmd][1])
 
-vectors = {
-    "U":(-1,0),
-    "D":(1,0),
-    "R":(0,1),
-    "L":(0,-1)
-    }
-
-travler = [1,1]
-board = (N,N)
-
-for command in commands:
-    X = travler[0]+vectors[command][0]
-    Y = travler[1]+vectors[command][1]
-    if( (X >= 1 and X<=N) and (Y >= 1 and Y<=N)):
-        travler[0] += vectors[command][0]
-        travler[1] += vectors[command][1]
-
-print(travler)
+print(init[0],init[1])
