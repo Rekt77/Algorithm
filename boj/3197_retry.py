@@ -1,56 +1,58 @@
-av = 0
-def findL(map,R,C):
-    L = []
-    for i in range(R):
-        for j in range(C):
-            if map[i][j] == "L":
-                L.append((i,j))
-        if len(L) == 2:
-            return L
+import sys
+from collections import deque
 
-def meeting(map,L1,visited=[]):
-    global av
-    visited.append(L1)
-    y, x = L1
-    vector = [(0,-1),(0,1),(-1,0),(1,0)]
-    for vy, vx in vector:
-        if (x+vx >= 0 and x+vx<len(map[0])) and (y+vy>=0 and y+vy<len(map)) and map[y+vy][x+vx] != "X" and (y+vy,x+vx) not in visited:
-            if map[y+vy][x+vx] == "L":
-                av  = 1
-            meeting(map,(y+vy,x+vx),visited)
-    return 0
+def check():
+    while auth_q1:
+        y, x = auth_q1.popleft()
+        if (y,x) == (tarY, tarX) :
+            return True
+        for vy, vx in [(0,1),(1,0),(0,-1),(-1,0)]:
+            if 0<=y+vy<H and 0<=x+vx<W and not swan_visited[y+vy][x+vx]:
+                if lake[y+vy][x+vx] == ".":
+                    auth_q1.append((y+vy, x+vx))
+                else :
+                    auth_q2.append((y+vy, x+vx))
+                swan_visited[y+vy][x+vx] = True
+    return False
 
-def icemelt(map):
-    meltyx = set()
-    vector = [(0,-1),(0,1),(-1,0),(1,0)]
-    for i in range(len(map)):
-        for j in range(len(map[0])):
-            if map[i][j] != "X":
-                for vy, vx in vector : 
-                    if (j+vx >= 0 and j+vx<len(map[0])) and (i+vy>=0 and i+vy<len(map)) and map[i+vy][j+vx] == "X":
-                        meltyx.add((i+vy,j+vx))
-    for y,x in meltyx:
-        map[y][x] = "."
-    return map
+def dayPassed():
+    while queue1:
+        y, x = queue1.popleft()
+        lake[y][x] = "."
+        for vy, vx in [(0,1),(1,0),(0,-1),(-1,0)]:
+            if 0<=y+vy<H and 0<=x+vx<W and not ice_visited[y+vy][x+vx]:
+                if lake[y+vy][x+vx] == ".":
+                    queue1.append((y+vy, x+vx))
+                else :
+                    queue2.append((y+vy,x+vx))
+                ice_visited[y+vy][x+vx] = True
 
-R, C = map(int,input().split())
-MAP = [ list(input()) for _ in range(R)]
-#MAP = ["...XXXXXX..XX.XXX",
-#       "....XXXXXXXXX.XXX",
-#       "...XXXXXXXXXXXX..",
-#       "..XXXXX.LXXXXXX..",
-#       ".XXXXXX..XXXXXX..",
-#       "XXXXXXX...XXXX...",
-#       "..XXXXX...XXX....",
-#       "....XXXXX.XXXL..."]
-#MAP = list(map(list,MAP))
+H, W = map(int,sys.stdin.readline().strip().split())
+lake = [list(sys.stdin.readline().strip()) for _ in range(H)]
+queue1,queue2 = deque(),deque()
+auth_q1,auth_q2 = deque(),deque()
+ice_visited = [[False]*W for _ in range(H)]
+swan_visited = [[False]*W for _ in range(H)]
 
-L1, L2 = findL(MAP,R,C)
+for i in range(H):
+    for j in range(W):
+        if lake[i][j] == "L":
+            if not auth_q1:
+                auth_q1.append((i,j))
+                swan_visited[i][j] = True
+            else :
+                tarY, tarX = i, j
+            lake[i][j] = '.'
+
+        if lake[i][j] == ".":
+            queue1.append((i,j))
+            ice_visited[i][j] = True
 day = 0
 while True:
-    meeting(MAP,L1,visited=[])
-    if av == 1:
+    dayPassed()
+    if check():
+        print(day)
         break
-    day += 1
-    MAP = icemelt(MAP)
-print(day)
+    day+=1
+    auth_q1,auth_q2 = auth_q2,deque()
+    queue1,queue2 = queue2,deque()
